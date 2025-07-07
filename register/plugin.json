@@ -1,16 +1,20 @@
 {
+    "meta": {
+        "status": "enabled",
+        "status_message": null,
+        "load_order": 0
+    },
     "id": "register",
     "name": "Register",
     "author": "Boy132",
     "version": "1.0.0",
     "description": "A simple way for users to register themselves",
+    "category": "plugin",
     "url": "https://github.com/Boy132/register",
+    "update_url": null,
     "namespace": "Boy132\\Register",
     "class": "RegisterPlugin",
-    "status": "enabled",
-    "status_message": null,
     "panels": null,
     "panel_version": null,
-    "category": "plugin",
-    "load_order": 0
+    "composer_packages": null
 }

@@ -1,16 +1,24 @@
 {
+    "meta": {
+        "status": "disabled",
+        "status_message": null,
+        "load_order": 0
+    },
     "id": "billing",
     "name": "Billing",
     "author": "Boy132",
     "version": "1.0.0",
     "description": "A simple billing plugin which allows users to purchase servers.",
+    "category": "plugin",
     "url": "https://github.com/Boy132/billing",
+    "update_url": null,
     "namespace": "Boy132\\Billing",
     "class": "BillingPlugin",
-    "status": "disabled",
-    "status_message": null,
-    "panels": "admin",
+    "panels": [
+        "admin"
+    ],
     "panel_version": null,
-    "category": "plugin",
-    "load_order": 0
+    "composer_packages": [
+        "stripe/stripe-php"
+    ]
 }

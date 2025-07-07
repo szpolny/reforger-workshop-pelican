@@ -1,16 +1,23 @@
 {
+    "meta": {
+        "status": "enabled",
+        "status_message": null,
+        "load_order": 0
+    },
     "id": "usercreatableservers",
     "name": "User Creatable Servers",
     "author": "Boy132",
     "version": "1.0.0",
     "description": "Allow users to create their own servers",
+    "category": "plugin",
     "url": "https://github.com/Boy132/usercreatableservers",
+    "update_url": null,
     "namespace": "Boy132\\UserCreatableServers",
     "class": "UserCreatableServersPlugin",
-    "status": "enabled",
-    "status_message": null,
-    "panels": "admin,app",
+    "panels": [
+        "admin",
+        "app"
+    ],
     "panel_version": null,
-    "category": "plugin",
-    "load_order": 0
+    "composer_packages": null
 }

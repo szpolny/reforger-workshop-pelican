@@ -1,16 +1,20 @@
 {
+    "meta": {
+        "status": "disabled",
+        "status_message": null,
+        "load_order": 0
+    },
     "id": "pterodactyltheme",
     "name": "Pterodactyl Theme",
     "author": "Boy132",
     "version": "1.0.0",
     "description": "Pterodactyl like colors and font",
+    "category": "theme",
     "url": "https://github.com/Boy132/pterodactyltheme",
+    "update_url": null,
     "namespace": "Boy132\\PterodactylTheme",
     "class": "PterodactylThemePlugin",
-    "status": "disabled",
-    "status_message": null,
     "panels": null,
     "panel_version": null,
-    "category": "theme",
-    "load_order": 0
+    "composer_packages": null
 }
