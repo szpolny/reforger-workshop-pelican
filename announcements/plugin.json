@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "Create panel wide announcements to inform your users about stuff",
     "category": "plugin",
-    "url": "https://github.com/Boy132/announcements",
+    "url": "https://github.com/pelican-dev/plugins/tree/main/announcements",
     "update_url": null,
     "namespace": "Boy132\\Announcements",
     "class": "AnnouncementsPlugin",

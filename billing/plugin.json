@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "A simple billing plugin which allows users to purchase servers.",
     "category": "plugin",
-    "url": "https://github.com/Boy132/billing",
+    "url": "https://github.com/pelican-dev/plugins/tree/main/billing",
     "update_url": null,
     "namespace": "Boy132\\Billing",
     "class": "BillingPlugin",

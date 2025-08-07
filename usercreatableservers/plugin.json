@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "Allow users to create their own servers",
     "category": "plugin",
-    "url": "https://github.com/Boy132/usercreatableservers",
+    "url": "https://github.com/pelican-dev/plugins/tree/main/usercreatableservers",
     "update_url": null,
     "namespace": "Boy132\\UserCreatableServers",
     "class": "UserCreatableServersPlugin",

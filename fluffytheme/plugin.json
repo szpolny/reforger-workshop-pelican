@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "A super nice and super fluffy theme.",
     "category": "theme",
-    "url": "https://github.com/Boy132/fluffytheme",
+    "url": "https://github.com/pelican-dev/plugins/tree/main/fluffytheme",
     "update_url": null,
     "namespace": "Boy132\\FluffyTheme",
     "class": "FluffyThemePlugin",

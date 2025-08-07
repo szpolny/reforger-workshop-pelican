@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "A simple way for users to register themselves",
     "category": "plugin",
-    "url": "https://github.com/Boy132/register",
+    "url": "https://github.com/pelican-dev/plugins/tree/main/register",
     "update_url": null,
     "namespace": "Boy132\\Register",
     "class": "RegisterPlugin",

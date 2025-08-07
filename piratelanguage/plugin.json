@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "Turns yer site's lingo into pirate talk, matey!",
     "category": "language",
-    "url": "https://github.com/Boy132/pirate-language",
+    "url": "https://github.com/pelican-dev/plugins/tree/main/pirate-language",
     "update_url": null,
     "namespace": "Boy132\\PirateLanguage",
     "class": "PirateLanguagePlugin",

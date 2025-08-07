@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "Pterodactyl like colors and font",
     "category": "theme",
-    "url": "https://github.com/Boy132/pterodactyltheme",
+    "url": "https://github.com/pelican-dev/plugins/tree/main/pterodactyltheme",
     "update_url": null,
     "namespace": "Boy132\\PterodactylTheme",
     "class": "PterodactylThemePlugin",
