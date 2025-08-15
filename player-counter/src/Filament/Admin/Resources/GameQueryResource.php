@@ -103,6 +103,11 @@ class GameQueryResource extends Resource
                     ->label(trans('player-counter::query.port_offset'))
                     ->placeholder(trans('player-counter::query.no_offset'))
                     ->numeric(),
+                TextEntry::make('eggs.name')
+                    ->label(trans('admin/mount.eggs'))
+                    ->placeholder(trans('player-counter::query.no_eggs'))
+                    ->badge()
+                    ->columnSpanFull(),
             ]);
     }
 
