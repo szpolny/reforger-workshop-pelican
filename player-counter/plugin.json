@@ -14,7 +14,7 @@
         "server"
     ],
     "panel_version": null,
-    "composer_packages": [
-        "krymosoftware/gameq"
-    ]
+    "composer_packages": {
+        "krymosoftware/gameq": "^4.0"
+    }
 }
