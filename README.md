@@ -1,20 +1,101 @@
-# Pelican Demo Plugins
+# Pelican Plugins
 
-These plugins are meant as a demo and proof-of-concept. They do not aim to be complete or to be publically released.
+A curated list of plugins for the [pelican panel](https://pelican.dev). Feel free to add plugins that you created via a pull request!
 
-| Name                   | Description                                                                                                           | Useable? |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------- | -------- |
-| Announcements          | Very simple announcements via AlertBanners.                                                                           | Yes      |
-| Billing                | Allows admins to create products and users to buy them. Features automatic server creation and also payment handling. | No       |
-| Fluffy Theme           | Simple "Theme" with silly colors and font.                                                                            | Yes      |
-| Legal Pages            | Adds some legal pages (like an Imprint) to the panel.                                                                 | Yes      |
-| Mclogs Uploader        | Adds a button to the console for uploading console logs to mclo.gs                                                    | Yes      |
-| Minecraft Modrinth     | Allows to easily download mods & plugins from modrinth.                                                               | Yes      |
-| Pirate Language        | Adds a new Pirate like language to the panel. (only Admin Dashboard, Profile & Health page)                           | Yes      |
-| Player Counter         | Adds a simple player counter to the console. Uses a GameQ fork.                                                       | Yes      |
-| Pterodactyl Theme      | Simple "Theme" with Pterodactyl like colors and font.                                                                 | Yes      |
-| Register               | Enables registration on all panels.                                                                                   | Yes      |
-| Robo Avatars           | Adds RoboHash as avatar provider.                                                                                     | Yes      |
-| Snowflakes             | Simple CSS Snowflakes.                                                                                                | Yes      |
-| Tickets                | Allows users to create tickets (per server) and admins to answer them.                                                | Yes      |
-| User Creatable Servers | Allows admins to assign resources to users. User can then create server themselves.                                   | Yes      |
+## How to install plugins
+
+<!-- TODO: Publish each plugin folder as release or package? -->
+Download the plugin folders you want to install and use the `Import` button on the plugins page in your panel.
+
+## Plugin list
+
+### [Announcements](/announcements) <sup><sub>by Boy132</sub></sup>
+
+Very simple announcements via AlertBanners.
+
+> [!WARNING]
+> Alert banners are currently bugged. See https://github.com/pelican-dev/panel/issues/1492
+
+---
+
+### [Billing](/billing) <sup><sub>by Boy132</sub></sup>
+
+Allows admins to create products and users to buy them. Features automatic server creation and also payment handling. Also adds a simple shop.
+
+> [!CAUTION]
+> This plugin is incomplete!
+
+---
+
+### [Fluffy Theme](/fluffy-theme) <sup><sub>by Boy132</sub></sup>
+
+Simple "Theme" with silly colors and font.
+
+---
+
+### [Legal Pages](/legal-pages) <sup><sub>by Boy132</sub></sup>
+
+Adds some legal pages (like an Imprint) to the panel.
+
+---
+
+### [Mclogs Uploader](/mclogs-uploader) <sup><sub>by Boy132</sub></sup>
+
+Adds a button to the console for uploading console logs to [mclo.gs](https://mclo.gs/).
+
+---
+
+### [Minecraft Modrinth](/minecraft-modrinth) <sup><sub>by Boy132</sub></sup>
+
+Allows to easily download mods & plugins from modrinth.
+
+---
+
+### [Pirate Language](/pirate-language) <sup><sub>by Boy132</sub></sup>
+
+Adds a new Pirate like language to the panel.
+
+> [!WARNING]
+> Only the server pages, the Admin Dashboard, Profile page & Health page are currently translated.
+
+---
+
+### [Player Counter](/player-counter) <sup><sub>by Boy132</sub></sup>
+
+Adds a simple player counter to the console and a player list page. Uses a [GameQ fork](https://github.com/krymosoftware/gameq).
+
+---
+
+### [Pterodactyl Theme](/pterodactyl-theme) <sup><sub>by Boy132</sub></sup>
+
+Simple "Theme" with Pterodactyl like colors and font.
+
+---
+
+### [Register](/register) <sup><sub>by Boy132</sub></sup>
+
+Enables registration on all panels.
+
+---
+
+### [Robo Avatars](/robo-avatars) <sup><sub>by Boy132</sub></sup>
+
+Adds [RoboHash](https://robohash.org/) as avatar provider.
+
+---
+
+### [Snowflakes](/snowflakes) <sup><sub>by Boy132</sub></sup>
+
+Adds simple CSS snowflakes to all panels.
+
+---
+
+### [Tickets](/tickets) <sup><sub>by Boy132</sub></sup>
+
+Allows users to create tickets (per server) and admins to answer them.
+
+---
+
+### [User Creatable Servers](/user-creatable-servers) <sup><sub>by Boy132</sub></sup>
+
+Allows admins to assign resources to users. User can then create server themselves.
