@@ -3,6 +3,8 @@
 namespace Boy132\Billing\Providers;
 
 use App\Models\Role;
+use Boy132\Billing\Console\Commands\CheckOrdersCommand;
+use Illuminate\Support\Facades\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Stripe\StripeClient;
 
@@ -16,5 +18,8 @@ class BillingPluginProvider extends ServiceProvider
         Role::registerCustomDefaultPermissions('product');
     }
 
-    public function boot(): void {}
+    public function boot(): void
+    {
+        Schedule::command(CheckOrdersCommand::class)->everyMinute()->withoutOverlapping();
+    }
 }

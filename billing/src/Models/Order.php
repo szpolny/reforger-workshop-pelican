@@ -8,10 +8,11 @@ use App\Models\Server;
 use App\Services\Servers\ServerCreationService;
 use App\Services\Servers\SuspensionService;
 use Boy132\Billing\Enums\OrderStatus;
+use Boy132\Billing\Enums\PriceInterval;
 use Exception;
-use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Stripe\Checkout\Session;
 use Stripe\StripeClient;
 
@@ -19,6 +20,7 @@ use Stripe\StripeClient;
  * @property int $id
  * @property ?string $stripe_id
  * @property OrderStatus $status
+ * @property ?Carbon $expires_at
  * @property int $customer_id
  * @property Customer $customer
  * @property int $product_price_id
@@ -31,6 +33,7 @@ class Order extends Model
     protected $fillable = [
         'stripe_id',
         'status',
+        'expires_at',
         'customer_id',
         'product_price_id',
         'server_id',
@@ -40,6 +43,7 @@ class Order extends Model
     {
         return [
             'status' => OrderStatus::class,
+            'expires_at' => 'datetime',
         ];
     }
 
@@ -58,6 +62,40 @@ class Order extends Model
         return $this->BelongsTo(Server::class, 'server_id');
     }
 
+    public function checkExpire(): bool
+    {
+        if (!is_null($this->expires_at) && now('UTC') >= $this->expires_at) {
+            try {
+                if ($this->server) {
+                    app(SuspensionService::class)->handle($this->server, SuspendAction::Suspend); // @phpstan-ignore myCustomRules.forbiddenGlobalFunctions
+                }
+            } catch (Exception $exception) {
+                report($exception);
+            }
+
+            $this->expireCheckoutSession();
+
+            $this->update([
+                'stripe_id' => null,
+                'status' => OrderStatus::Expired,
+            ]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function expireCheckoutSession(): void
+    {
+        if (!is_null($this->stripe_id)) {
+            /** @var StripeClient $stripeClient */
+            $stripeClient = app(StripeClient::class); // @phpstan-ignore myCustomRules.forbiddenGlobalFunctions
+
+            $stripeClient->checkout->sessions->expire($this->stripe_id);
+        }
+    }
+
     public function getCheckoutSession(): Session
     {
         /** @var StripeClient $stripeClient */
@@ -68,7 +106,6 @@ class Order extends Model
                 'customer_email' => $this->customer->user->email,
                 'success_url' => route('billing.checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('billing.checkout.cancel') . '?session_id={CHECKOUT_SESSION_ID}',
-                'return_url' => Filament::getPanel('shop')->getUrl(),
                 'line_items' => [
                     [
                         'price' => $this->productPrice->stripe_id,
@@ -91,8 +128,20 @@ class Order extends Model
 
     public function activate(): void
     {
-        $this->status = OrderStatus::Active;
-        $this->save();
+        $expireDate = match ($this->productPrice->interval_type) {
+            PriceInterval::Day => now('UTC')->addDays($this->productPrice->interval_value),
+            PriceInterval::Week => now('UTC')->addWeeks($this->productPrice->interval_value),
+            PriceInterval::Month => now('UTC')->addMonths($this->productPrice->interval_value),
+            PriceInterval::Year => now('UTC')->addYears($this->productPrice->interval_value),
+        };
+
+        $this->expireCheckoutSession();
+
+        $this->update([
+            'stripe_id' => null,
+            'status' => OrderStatus::Active,
+            'expires_at' => $expireDate,
+        ]);
 
         try {
             if ($this->server) {
@@ -115,8 +164,12 @@ class Order extends Model
             report($exception);
         }
 
-        $this->status = OrderStatus::Closed;
-        $this->save();
+        $this->expireCheckoutSession();
+
+        $this->update([
+            'stripe_id' => null,
+            'status' => OrderStatus::Closed,
+        ]);
     }
 
     private function createServer(): Server
@@ -157,8 +210,9 @@ class Order extends Model
 
         $server = app(ServerCreationService::class)->handle($data, $object); // @phpstan-ignore myCustomRules.forbiddenGlobalFunctions
 
-        $this->server_id = $server->id;
-        $this->save();
+        $this->update([
+            'server_id' => $server->id,
+        ]);
 
         return $server;
     }

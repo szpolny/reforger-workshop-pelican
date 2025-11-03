@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('stripe_id')->nullable();
             $table->string('status')->default(OrderStatus::Pending);
+            $table->timestamp('expires_at')->nullable();
             $table->foreignIdFor(Customer::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(ProductPrice::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Server::class)->nullable()->constrained()->cascadeOnDelete();

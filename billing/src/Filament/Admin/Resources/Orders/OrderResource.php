@@ -3,6 +3,7 @@
 namespace Boy132\Billing\Filament\Admin\Resources\Orders;
 
 use App\Filament\Admin\Resources\Servers\Pages\EditServer;
+use App\Filament\Components\Tables\Columns\DateTimeColumn;
 use Boy132\Billing\Enums\OrderStatus;
 use Boy132\Billing\Filament\Admin\Resources\Customers\Pages\EditCustomer;
 use Boy132\Billing\Filament\Admin\Resources\Orders\Pages\ListOrders;
@@ -41,6 +42,7 @@ class OrderResource extends Resource
                     ->url(fn (Order $order) => EditCustomer::getUrl(['record' => $order->customer])),
                 TextColumn::make('server.name')
                     ->label('Server')
+                    ->placeholder('No server')
                     ->icon('tabler-brand-docker')
                     ->sortable()
                     ->url(fn (Order $order) => $order->server ? EditServer::getUrl(['record' => $order->server]) : null),
@@ -60,6 +62,11 @@ class OrderResource extends Resource
 
                         return $formatter->formatCurrency($state, config('billing.currency'));
                     }),
+                DateTimeColumn::make('expires_at')
+                    ->label('Expires')
+                    ->placeholder('No expire')
+                    ->color(fn ($state) => $state <= now('UTC') ? 'danger' : null)
+                    ->since(),
             ])
             ->recordActions([
                 Action::make('activate')

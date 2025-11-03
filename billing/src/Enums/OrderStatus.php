@@ -10,6 +10,7 @@ enum OrderStatus: string implements HasColor, HasIcon, HasLabel
 {
     case Pending = 'pending';
     case Active = 'active';
+    case Expired = 'expired';
     case Closed = 'closed';
 
     public function getColor(): string
@@ -17,6 +18,7 @@ enum OrderStatus: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::Pending => 'warning',
             self::Active => 'success',
+            self::Expired => 'warning',
             self::Closed => 'danger',
         };
     }
@@ -26,6 +28,7 @@ enum OrderStatus: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::Pending => 'tabler-circle-dotted',
             self::Active => 'tabler-circle-check',
+            self::Expired => 'tabler-exclamation-circle',
             self::Closed => 'tabler-circle-x',
         };
     }

@@ -66,21 +66,17 @@ class ProductPrice extends Model
                 'currency' => config('billing.currency'),
                 'nickname' => $this->name,
                 'product' => $this->product->stripe_id,
-                'recurring' => [
-                    'interval' => $this->interval_type->value,
-                    'interval_count' => $this->interval_value,
-                ],
                 'unit_amount' => $this->cost,
             ]);
 
-            $this->update([
+            $this->updateQuietly([
                 'stripe_id' => $stripePrice->id,
             ]);
         } else {
             $stripePrice = $stripeClient->prices->retrieve($this->stripe_id);
 
             // You can't update price objects on stripe, so check for changes and recreate the price if needed
-            if ($stripePrice->product !== $this->product->stripe_id || $stripePrice->unit_amount !== $this->cost || $stripePrice->recurring->interval !== $this->interval_type->value || $stripePrice->recurring->interval_count !== $this->interval_value) {
+            if ($stripePrice->product !== $this->product->stripe_id || $stripePrice->unit_amount !== $this->cost) {
                 $this->stripe_id = null;
                 $this->sync();
             }

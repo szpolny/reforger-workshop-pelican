@@ -101,7 +101,7 @@ class Product extends Model
                 'description' => $this->description,
             ]);
 
-            $this->update([
+            $this->updateQuietly([
                 'stripe_id' => $stripeProduct->id,
             ]);
         } else {

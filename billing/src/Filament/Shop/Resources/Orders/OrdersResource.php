@@ -2,10 +2,14 @@
 
 namespace Boy132\Billing\Filament\Shop\Resources\Orders;
 
+use App\Filament\Components\Tables\Columns\DateTimeColumn;
 use App\Filament\Server\Pages\Console;
+use Boy132\Billing\Enums\OrderStatus;
 use Boy132\Billing\Filament\Shop\Resources\Orders\Pages\ListOrders;
 use Boy132\Billing\Models\Customer;
 use Boy132\Billing\Models\Order;
+use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -44,8 +48,7 @@ class OrdersResource extends Resource
                     ->label('Server')
                     ->placeholder('No server')
                     ->icon('tabler-brand-docker')
-                    ->sortable()
-                    ->url(fn (Order $order) => $order->server ? Console::getUrl(panel: 'server', tenant: $order->server) : null),
+                    ->sortable(),
                 TextColumn::make('productPrice.product.name')
                     ->label('Product')
                     ->icon('tabler-package')
@@ -61,6 +64,25 @@ class OrdersResource extends Resource
 
                         return $formatter->formatCurrency($state, config('billing.currency'));
                     }),
+                DateTimeColumn::make('expires_at')
+                    ->label('Expires')
+                    ->placeholder('No expire')
+                    ->color(fn ($state) => $state <= now('UTC') ? 'danger' : null)
+                    ->since(),
+            ])
+            ->recordActions([
+                ViewAction::make()
+                    ->url(fn (Order $order) => $order->server ? Console::getUrl(panel: 'server', tenant: $order->server) : null),
+                Action::make('cancel')
+                    ->visible(fn (Order $order) => $order->status === OrderStatus::Active)
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->action(fn (Order $order) => $order->close()),
+                Action::make('renew')
+                    ->visible(fn (Order $order) => $order->status === OrderStatus::Expired)
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->action(fn (Order $order) => redirect($order->getCheckoutSession()->url)),
             ])
             ->emptyStateHeading('No Orders')
             ->emptyStateDescription('');
