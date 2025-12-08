@@ -14,6 +14,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('record_type')->default('A');
+            $table->string('cloudflare_id')->nullable();
             $table->foreignIdFor(CloudflareDomain::class, 'domain_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Allocation::class)->constrained()->cascadeOnDelete();
             $table->timestamps();

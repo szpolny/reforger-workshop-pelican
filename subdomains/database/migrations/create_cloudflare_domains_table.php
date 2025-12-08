@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('cloudflare_domains', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('cloudflare_id')->nullable();
             $table->timestamps();
         });
     }

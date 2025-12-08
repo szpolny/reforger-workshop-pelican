@@ -105,9 +105,6 @@ Adds simple CSS snowflakes to all panels.
 
 Allows users to create subdomains (on cloudflare) for their servers.
 
-> [!CAUTION]
-> This plugin is currently not working due to a dependency conflict!
-
 ---
 
 ### [Tawk.to Widget](/tawkto-widget) <sup><sub>by Boy132</sub></sup>
