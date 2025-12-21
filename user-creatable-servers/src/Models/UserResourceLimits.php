@@ -137,9 +137,9 @@ class UserResourceLimits extends Model
                 'skip_scripts' => false,
                 'start_on_completion' => true,
                 'oom_killer' => false,
-                'database_limit' => config('usercreatableservers.database_limit'),
-                'allocation_limit' => config('usercreatableservers.allocation_limit'),
-                'backup_limit' => config('usercreatableservers.backup_limit'),
+                'database_limit' => config('user-creatable-servers.database_limit'),
+                'allocation_limit' => config('user-creatable-servers.allocation_limit'),
+                'backup_limit' => config('user-creatable-servers.backup_limit'),
             ];
 
             $object = new DeploymentObject();
