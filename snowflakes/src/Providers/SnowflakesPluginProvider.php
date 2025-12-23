@@ -41,7 +41,7 @@ class SnowflakesPluginProvider extends ServiceProvider
                 'opacity' => $opacity,
                 'density' => $density,
                 'quality' => $quality,
-                ])
+            ])
         );
     }
 }

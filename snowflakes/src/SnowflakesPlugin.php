@@ -3,13 +3,13 @@
 namespace Boy132\Snowflakes;
 
 use App\Contracts\Plugins\HasPluginSettings;
+use App\Traits\EnvironmentWriterTrait;
 use Filament\Contracts\Plugin;
 use Filament\Forms\Components\Slider;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Panel;
 use Filament\Schemas\Components\Group;
-use App\Traits\EnvironmentWriterTrait;
 
 class SnowflakesPlugin implements HasPluginSettings, Plugin
 {
