@@ -73,6 +73,9 @@ class ArmaReforgerWorkshopService
      */
     public function addMod(Server $server, DaemonFileRepository $fileRepository, string $modId, string $name, string $version = ''): bool
     {
+        // Normalize modId to uppercase for consistent comparison
+        $modId = strtoupper($modId);
+
         try {
             $configPath = $this->getConfigPath($server);
             $content = $fileRepository->setServer($server)->getContent($configPath);
@@ -90,9 +93,9 @@ class ArmaReforgerWorkshopService
                 $config['game']['mods'] = [];
             }
 
-            // Check if mod already exists
+            // Check if mod already exists (case-insensitive)
             foreach ($config['game']['mods'] as $existingMod) {
-                if (($existingMod['modId'] ?? '') === $modId) {
+                if (strtoupper($existingMod['modId'] ?? '') === $modId) {
                     return true; // Already installed
                 }
             }
@@ -128,6 +131,9 @@ class ArmaReforgerWorkshopService
      */
     public function removeMod(Server $server, DaemonFileRepository $fileRepository, string $modId): bool
     {
+        // Normalize modId to uppercase for consistent comparison
+        $modId = strtoupper($modId);
+
         try {
             $configPath = $this->getConfigPath($server);
             $content = $fileRepository->setServer($server)->getContent($configPath);
@@ -138,7 +144,7 @@ class ArmaReforgerWorkshopService
             }
 
             $config['game']['mods'] = collect($config['game']['mods'])
-                ->filter(fn ($mod) => ($mod['modId'] ?? '') !== $modId)
+                ->filter(fn ($mod) => strtoupper($mod['modId'] ?? '') !== $modId)
                 ->values()
                 ->toArray();
 
