@@ -225,8 +225,15 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
                 $response = $responses[(string) $index] ?? null;
                 $details = $this->parseModDetailsFromResponse($response, $mod['modId']);
 
-                // Cache the result
-                cache()->put($cachePrefix . $mod['modId'], $details, $cacheTtl);
+                // Cache the result: use long TTL for successful responses, short TTL for failures
+                $isSuccessfulResponse = isset($details['name']) && count($details) > 1;
+                if ($isSuccessfulResponse) {
+                    cache()->put($cachePrefix . $mod['modId'], $details, $cacheTtl);
+                } else {
+                    // Mark as failed and cache with short TTL (2 minutes) to allow retries
+                    $details['failed'] = true;
+                    cache()->put($cachePrefix . $mod['modId'], $details, now()->addMinutes(2));
+                }
                 $cachedDetails[$index] = $details;
             }
         }
