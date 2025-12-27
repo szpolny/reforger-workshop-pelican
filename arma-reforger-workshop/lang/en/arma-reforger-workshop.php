@@ -31,9 +31,9 @@ return [
     ],
     'notifications' => [
         'mod_added' => 'Mod added',
-        'mod_added_body' => '\':name\' has been added to your server configuration.',
+        'mod_added_body' => "':name' has been added to your server configuration.",
         'mod_removed' => 'Mod removed',
-        'mod_removed_body' => '\':name\' has been removed from your server configuration.',
+        'mod_removed_body' => "':name' has been removed from your server configuration.",
         'failed_to_add' => 'Failed to add mod',
         'failed_to_remove' => 'Failed to remove mod',
         'config_update_failed' => 'Could not update the server configuration.',
