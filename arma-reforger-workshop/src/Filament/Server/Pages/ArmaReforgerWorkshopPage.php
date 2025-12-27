@@ -149,14 +149,14 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
 
                             if ($success) {
                                 Notification::make()
-                                    ->title('Mod removed')
-                                    ->body("'{$record['name']}' has been removed from your server configuration.")
+                                    ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_removed'))
+                                    ->body(__('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_removed_body', ['name' => $record['name']]))
                                     ->success()
                                     ->send();
                             } else {
                                 Notification::make()
-                                    ->title('Failed to remove mod')
-                                    ->body('Could not update the server configuration.')
+                                    ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_remove'))
+                                    ->body(__('arma-reforger-workshop::arma-reforger-workshop.notifications.config_update_failed'))
                                     ->danger()
                                     ->send();
                             }
@@ -164,7 +164,7 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
                             report($exception);
 
                             Notification::make()
-                                ->title('Failed to remove mod')
+                                ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_remove'))
                                 ->body($exception->getMessage())
                                 ->danger()
                                 ->send();
@@ -217,14 +217,14 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
 
                         if ($success) {
                             Notification::make()
-                                ->title('Mod added')
-                                ->body("'{$data['name']}' has been added to your server configuration.")
+                                ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_added'))
+                                ->body(__('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_added_body', ['name' => $data['name']]))
                                 ->success()
                                 ->send();
                         } else {
                             Notification::make()
-                                ->title('Failed to add mod')
-                                ->body('Could not update the server configuration.')
+                                ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_add'))
+                                ->body(__('arma-reforger-workshop::arma-reforger-workshop.notifications.config_update_failed'))
                                 ->danger()
                                 ->send();
                         }
@@ -232,7 +232,7 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
                         report($exception);
 
                         Notification::make()
-                            ->title('Failed to add mod')
+                            ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_add'))
                             ->body($exception->getMessage())
                             ->danger()
                             ->send();
