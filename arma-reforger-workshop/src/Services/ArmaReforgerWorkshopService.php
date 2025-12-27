@@ -176,14 +176,14 @@ class ArmaReforgerWorkshopService
      */
     public function getModDetails(string $modId): array
     {
-        return cache()->remember("arma_reforger_mod:$modId", now()->addHours(6), function () use ($modId) {
-            try {
+        try {
+            return cache()->remember("arma_reforger_mod:$modId", now()->addHours(6), function () use ($modId) {
                 $response = Http::timeout(10)
                     ->connectTimeout(5)
                     ->get(self::WORKSHOP_URL . '/' . $modId);
 
                 if (!$response->successful()) {
-                    return ['modId' => $modId];
+                    throw new Exception('Failed to fetch mod details: HTTP ' . $response->status());
                 }
 
                 $html = $response->body();
@@ -216,12 +216,12 @@ class ArmaReforgerWorkshopService
                 }
 
                 return array_filter($details, fn ($v) => $v !== null);
-            } catch (Exception $exception) {
-                report($exception);
+            });
+        } catch (Exception $exception) {
+            report($exception);
 
-                return ['modId' => $modId];
-            }
-        });
+            return ['modId' => $modId];
+        }
     }
 
     /**
@@ -233,8 +233,8 @@ class ArmaReforgerWorkshopService
     {
         $cacheKey = 'arma_reforger_browse:' . md5($search) . ":$page";
 
-        return cache()->remember($cacheKey, now()->addMinutes(15), function () use ($search, $page) {
-            try {
+        try {
+            return cache()->remember($cacheKey, now()->addMinutes(15), function () use ($search, $page) {
                 $url = self::WORKSHOP_URL . '?' . http_build_query([
                     'search' => $search,
                     'page' => $page,
@@ -245,7 +245,7 @@ class ArmaReforgerWorkshopService
                     ->get($url);
 
                 if (!$response->successful()) {
-                    return ['mods' => [], 'total' => 0, 'page' => $page, 'perPage' => 24];
+                    throw new Exception('Failed to browse workshop: HTTP ' . $response->status());
                 }
 
                 $html = $response->body();
@@ -287,12 +287,12 @@ class ArmaReforgerWorkshopService
                     'page' => $page,
                     'perPage' => 24, // Workshop uses 24 per page
                 ];
-            } catch (Exception $exception) {
-                report($exception);
+            });
+        } catch (Exception $exception) {
+            report($exception);
 
-                return ['mods' => [], 'total' => 0, 'page' => $page, 'perPage' => 24];
-            }
-        });
+            return ['mods' => [], 'total' => 0, 'page' => $page, 'perPage' => 24];
+        }
     }
 
     /**
