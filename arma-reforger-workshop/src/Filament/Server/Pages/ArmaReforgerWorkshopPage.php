@@ -155,14 +155,14 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
 
                             if ($success) {
                                 Notification::make()
-                                    ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_removed'))
-                                    ->body(__('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_removed_body', ['name' => $record['name']]))
+                                    ->title(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_removed'))
+                                    ->body(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_removed_body', ['name' => $record['name']]))
                                     ->success()
                                     ->send();
                             } else {
                                 Notification::make()
-                                    ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_remove'))
-                                    ->body(__('arma-reforger-workshop::arma-reforger-workshop.notifications.config_update_failed'))
+                                    ->title(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_remove'))
+                                    ->body(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.config_update_failed'))
                                     ->danger()
                                     ->send();
                             }
@@ -170,7 +170,7 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
                             report($exception);
 
                             Notification::make()
-                                ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_remove'))
+                                ->title(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_remove'))
                                 ->body($exception->getMessage())
                                 ->danger()
                                 ->send();
@@ -334,14 +334,14 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
 
                         if ($success) {
                             Notification::make()
-                                ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_added'))
-                                ->body(__('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_added_body', ['name' => $data['name']]))
+                                ->title(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_added'))
+                                ->body(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_added_body', ['name' => $data['name']]))
                                 ->success()
                                 ->send();
                         } else {
                             Notification::make()
-                                ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_add'))
-                                ->body(__('arma-reforger-workshop::arma-reforger-workshop.notifications.config_update_failed'))
+                                ->title(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_add'))
+                                ->body(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.config_update_failed'))
                                 ->danger()
                                 ->send();
                         }
@@ -349,7 +349,7 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
                         report($exception);
 
                         Notification::make()
-                            ->title(__('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_add'))
+                            ->title(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.failed_to_add'))
                             ->body($exception->getMessage())
                             ->danger()
                             ->send();
