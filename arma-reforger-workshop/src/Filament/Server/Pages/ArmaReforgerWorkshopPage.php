@@ -223,7 +223,7 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
 
             foreach ($uncachedMods as $index => $mod) {
                 $response = $responses[(string) $index] ?? null;
-                $details = $this->parseModDetailsFromResponse($response, $mod['modId']);
+                $details = (!$response || !$response->successful()) ? ['modId' => $mod['modId']] : ArmaReforgerWorkshop::parseNextDataFromHtml($response->body(), $mod['modId']);
 
                 // Cache the result: use long TTL for successful responses, short TTL for failures
                 $isSuccessfulResponse = isset($details['name']) && count($details) > 1;
@@ -244,50 +244,6 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
 
             return array_merge($mod, $details);
         })->toArray();
-    }
-
-    /**
-     * Parse mod details from HTTP response.
-     *
-     * @return array<string, mixed>
-     */
-    protected function parseModDetailsFromResponse($response, string $modId): array
-    {
-        try {
-            if (!$response || !$response->successful()) {
-                return ['modId' => $modId];
-            }
-
-            $html = $response->body();
-            $details = ['modId' => $modId];
-
-            // Extract data from __NEXT_DATA__ JSON
-            if (preg_match('/<script[^>]*id="__NEXT_DATA__"[^>]*>(.+?)<\/script>/s', $html, $jsonMatch)) {
-                $jsonData = json_decode($jsonMatch[1], true);
-
-                if ($jsonData && isset($jsonData['props']['pageProps']['asset'])) {
-                    $asset = $jsonData['props']['pageProps']['asset'];
-
-                    $details['name'] = $asset['name'] ?? null;
-                    $details['version'] = $asset['currentVersionNumber'] ?? null;
-                    $details['subscribers'] = $asset['subscriberCount'] ?? null;
-
-                    if (isset($asset['averageRating'])) {
-                        $details['rating'] = (int) round($asset['averageRating'] * 100);
-                    }
-                }
-
-                if (isset($jsonData['props']['pageProps']['getAssetDownloadTotal']['total'])) {
-                    $details['downloads'] = $jsonData['props']['pageProps']['getAssetDownloadTotal']['total'];
-                }
-            }
-
-            return array_filter($details, fn ($v) => $v !== null);
-        } catch (Exception $exception) {
-            report($exception);
-
-            return ['modId' => $modId];
-        }
     }
 
     protected function getHeaderActions(): array

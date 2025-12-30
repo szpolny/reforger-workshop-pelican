@@ -170,57 +170,93 @@ class ArmaReforgerWorkshopService
     }
 
     /**
-     * Fetch mod details from the workshop page
+     * Parse mod details from HTML containing __NEXT_DATA__
      *
      * @return array<string, mixed>
      */
-    public function getModDetails(string $modId): array
+    public function parseNextDataFromHtml(string $html, string $modId): array
     {
         try {
-            return cache()->remember("arma_reforger_mod:$modId", now()->addHours(6), function () use ($modId) {
-                $response = Http::timeout(10)
-                    ->connectTimeout(5)
-                    ->get(self::WORKSHOP_URL . '/' . $modId);
+            $details = [
+                'modId' => $modId,
+            ];
 
-                if (!$response->successful()) {
-                    throw new Exception('Failed to fetch mod details: HTTP ' . $response->status());
-                }
+            // Extract data from __NEXT_DATA__ JSON
+            if (preg_match('/<script[^>]*id="__NEXT_DATA__"[^>]*>(.+?)<\/script>/s', $html, $jsonMatch)) {
+                $jsonData = json_decode($jsonMatch[1], true);
 
-                $html = $response->body();
+                if ($jsonData && isset($jsonData['props']['pageProps']['asset'])) {
+                    $asset = $jsonData['props']['pageProps']['asset'];
 
-                $details = [
-                    'modId' => $modId,
-                ];
+                    $details['name'] = $asset['name'] ?? null;
+                    $details['version'] = $asset['currentVersionNumber'] ?? null;
+                    $details['subscribers'] = $asset['subscriberCount'] ?? null;
 
-                // Extract data from __NEXT_DATA__ JSON
-                if (preg_match('/<script[^>]*id="__NEXT_DATA__"[^>]*>(.+?)<\/script>/s', $html, $jsonMatch)) {
-                    $jsonData = json_decode($jsonMatch[1], true);
-
-                    if ($jsonData && isset($jsonData['props']['pageProps']['asset'])) {
-                        $asset = $jsonData['props']['pageProps']['asset'];
-
-                        $details['name'] = $asset['name'] ?? null;
-                        $details['version'] = $asset['currentVersionNumber'] ?? null;
-                        $details['subscribers'] = $asset['subscriberCount'] ?? null;
-
-                        // Rating is stored as decimal (0.96 = 96%)
-                        if (isset($asset['averageRating'])) {
-                            $details['rating'] = (int) round($asset['averageRating'] * 100);
-                        }
-                    }
-
-                    // Downloads are in a separate key
-                    if (isset($jsonData['props']['pageProps']['getAssetDownloadTotal']['total'])) {
-                        $details['downloads'] = $jsonData['props']['pageProps']['getAssetDownloadTotal']['total'];
+                    // Rating is stored as decimal (0.96 = 96%)
+                    if (isset($asset['averageRating'])) {
+                        $details['rating'] = (int) round($asset['averageRating'] * 100);
                     }
                 }
 
-                return array_filter($details, fn ($v) => $v !== null);
-            });
+                // Downloads are in a separate key
+                if (isset($jsonData['props']['pageProps']['getAssetDownloadTotal']['total'])) {
+                    $details['downloads'] = $jsonData['props']['pageProps']['getAssetDownloadTotal']['total'];
+                }
+            }
+
+            return array_filter($details, fn ($v) => $v !== null);
         } catch (Exception $exception) {
             report($exception);
 
             return ['modId' => $modId];
+        }
+    }
+
+    /**
+     * Fetch mod details from the workshop page
+     *
+     * @return array<string, mixed>
+     */
+    public function getModDetails(string $modId, ?int $failureTtlMinutes = 2): array
+    {
+        $cacheKey = "arma_reforger_mod:$modId";
+
+        // Check cache first
+        $cached = cache()->get($cacheKey);
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        try {
+            $response = Http::timeout(10)
+                ->connectTimeout(5)
+                ->get(self::WORKSHOP_URL . '/' . $modId);
+
+            if (!$response->successful()) {
+                throw new Exception('Failed to fetch mod details: HTTP ' . $response->status());
+            }
+
+            $html = $response->body();
+            $details = $this->parseNextDataFromHtml($html, $modId);
+
+            // Cache successful response with long TTL
+            $isSuccessful = isset($details['name']) && count($details) > 1;
+            if ($isSuccessful) {
+                cache()->put($cacheKey, $details, now()->addHours(6));
+            } else {
+                // Cache minimal details with short TTL
+                $details['failed'] = true;
+                cache()->put($cacheKey, $details, now()->addMinutes($failureTtlMinutes));
+            }
+
+            return $details;
+        } catch (Exception $exception) {
+            report($exception);
+
+            $details = ['modId' => $modId, 'failed' => true];
+            cache()->put($cacheKey, $details, now()->addMinutes($failureTtlMinutes));
+
+            return $details;
         }
     }
 
