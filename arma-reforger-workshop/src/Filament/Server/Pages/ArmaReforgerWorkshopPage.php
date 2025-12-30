@@ -50,7 +50,7 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
 
     public static function getNavigationLabel(): string
     {
-        return 'Workshop Mods';
+        return trans('arma-reforger-workshop::arma-reforger-workshop.navigation.workshop_mods');
     }
 
     public static function getModelLabel(): string
@@ -109,39 +109,39 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
             ->paginated([20])
             ->columns([
                 TextColumn::make('name')
-                    ->label('Mod Name')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.mod_name'))
                     ->searchable()
                     ->description(fn (array $record) => $record['modId']),
                 TextColumn::make('version')
-                    ->label('Version')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.version'))
                     ->placeholder('-')
                     ->toggleable(),
                 TextColumn::make('subscribers')
-                    ->label('Subscribers')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.subscribers'))
                     ->icon('tabler-users')
                     ->numeric()
                     ->placeholder('-')
                     ->toggleable(),
                 TextColumn::make('downloads')
-                    ->label('Downloads')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.downloads'))
                     ->icon('tabler-download')
                     ->numeric()
                     ->placeholder('-')
                     ->toggleable(),
                 TextColumn::make('rating')
-                    ->label('Rating')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.rating'))
                     ->formatStateUsing(fn ($state) => $state ? "{$state}%" : '-')
                     ->toggleable(),
             ])
             ->recordUrl(fn (array $record) => ArmaReforgerWorkshop::getModWorkshopUrl($record['modId']), true)
             ->recordActions([
                 Action::make('remove')
-                    ->label('Remove')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.actions.remove'))
                     ->icon('tabler-trash')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->modalHeading('Remove Mod')
-                    ->modalDescription(fn (array $record) => "Are you sure you want to remove \"{$record['name']}\" from your server's mod list?")
+                    ->modalHeading(trans('arma-reforger-workshop::arma-reforger-workshop.modals.remove_mod_heading'))
+                    ->modalDescription(fn (array $record) => trans('arma-reforger-workshop::arma-reforger-workshop.modals.remove_mod_description', ['name' => $record['name']]))
                     ->action(function (array $record, DaemonFileRepository $fileRepository) {
                         try {
                             /** @var Server $server */
@@ -297,27 +297,27 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
 
         return [
             Action::make('add_mod')
-                ->label('Add Mod')
+                ->label(trans('arma-reforger-workshop::arma-reforger-workshop.actions.add_mod'))
                 ->icon('tabler-plus')
                 ->form([
                     TextInput::make('modId')
-                        ->label('Mod ID')
-                        ->helperText('Enter the mod ID (GUID) from the Bohemia Workshop. Example: 5965550F24A0C152')
-                        ->placeholder('5965550F24A0C152')
+                        ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.mod_id'))
+                        ->helperText(trans('arma-reforger-workshop::arma-reforger-workshop.form.mod_id_helper'))
+                        ->placeholder(trans('arma-reforger-workshop::arma-reforger-workshop.form.mod_id_placeholder'))
                         ->required()
                         ->maxLength(16)
                         ->minLength(16)
                         ->regex('/^[A-Fa-f0-9]{16}$/')
                         ->validationMessages([
-                            'regex' => 'The mod ID must be a 16-character hexadecimal string.',
+                            'regex' => trans('arma-reforger-workshop::arma-reforger-workshop.form.mod_id_validation_regex'),
                         ]),
                     TextInput::make('name')
-                        ->label('Mod Name')
-                        ->helperText('A friendly name for the mod')
+                        ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.mod_name'))
+                        ->helperText(trans('arma-reforger-workshop::arma-reforger-workshop.form.mod_name_helper'))
                         ->required(),
                     TextInput::make('version')
-                        ->label('Version')
-                        ->placeholder('Optional - leave empty for latest'),
+                        ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.version'))
+                        ->placeholder(trans('arma-reforger-workshop::arma-reforger-workshop.form.version_placeholder')),
                 ])
                 ->action(function (array $data, DaemonFileRepository $fileRepository) {
                     try {
@@ -356,15 +356,15 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
                     }
                 }),
             Action::make('browse_workshop')
-                ->label('Browse Workshop')
+                ->label(trans('arma-reforger-workshop::arma-reforger-workshop.actions.browse_workshop'))
                 ->icon('tabler-world-search')
                 ->url(fn () => BrowseWorkshopPage::getUrl()),
             Action::make('open_workshop_external')
-                ->label('Open in Browser')
+                ->label(trans('arma-reforger-workshop::arma-reforger-workshop.actions.open_in_browser'))
                 ->icon('tabler-external-link')
                 ->url(ArmaReforgerWorkshopService::WORKSHOP_URL, true),
             Action::make('open_config')
-                ->label('Edit Config')
+                ->label(trans('arma-reforger-workshop::arma-reforger-workshop.actions.edit_config'))
                 ->icon('tabler-file-settings')
                 ->url(fn () => ListFiles::getUrl(['path' => rtrim(dirname(ArmaReforgerWorkshop::getConfigPath($server)), '.') ?: '/']), true),
         ];
@@ -380,11 +380,11 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
                 Grid::make()
                     ->schema([
                         TextEntry::make('config_path')
-                            ->label('Config Path')
+                            ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.config_path'))
                             ->state(fn () => ArmaReforgerWorkshop::getConfigPath($server))
                             ->badge(),
                         TextEntry::make('installed_mods')
-                            ->label('Installed Mods')
+                            ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.installed_mods'))
                             ->state(function () use ($server) {
                                 try {
                                     /** @var DaemonFileRepository $fileRepository */

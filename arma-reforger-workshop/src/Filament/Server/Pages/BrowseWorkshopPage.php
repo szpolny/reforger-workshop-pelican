@@ -48,7 +48,7 @@ class BrowseWorkshopPage extends Page implements HasTable
 
     public static function getNavigationLabel(): string
     {
-        return 'Browse Workshop';
+        return trans('arma-reforger-workshop::arma-reforger-workshop.navigation.browse_workshop');
     }
 
     public static function getModelLabel(): string
@@ -63,7 +63,7 @@ class BrowseWorkshopPage extends Page implements HasTable
 
     public function getTitle(): string
     {
-        return 'Browse Arma Reforger Workshop';
+        return trans('arma-reforger-workshop::arma-reforger-workshop.titles.browse_workshop');
     }
 
     protected function getInstalledModIds(): array
@@ -110,31 +110,31 @@ class BrowseWorkshopPage extends Page implements HasTable
                     ->extraImgAttributes(['class' => 'rounded'])
                     ->defaultImageUrl(fn () => 'https://reforger.armaplatform.com/favicon.ico'),
                 TextColumn::make('name')
-                    ->label('Mod')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.mod'))
                     ->weight('bold')
                     ->searchable()
                     ->description(fn (array $record) => \Illuminate\Support\Str::limit($record['summary'] ?? '', 80)),
                 TextColumn::make('author')
-                    ->label('Author')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.author'))
                     ->icon('tabler-user')
                     ->toggleable(),
                 TextColumn::make('version')
-                    ->label('Version')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.version'))
                     ->badge()
                     ->color('gray')
                     ->toggleable(),
                 TextColumn::make('subscribers')
-                    ->label('Subscribers')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.subscribers'))
                     ->icon('tabler-users')
                     ->numeric()
                     ->sortable(false)
                     ->toggleable(),
                 TextColumn::make('rating')
-                    ->label('Rating')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.rating'))
                     ->formatStateUsing(fn ($state) => $state ? "{$state}%" : '-')
                     ->toggleable(),
                 TextColumn::make('type')
-                    ->label('Type')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.labels.type'))
                     ->badge()
                     ->color(fn (string $state) => match ($state) {
                         'scenario' => 'info',
@@ -146,13 +146,13 @@ class BrowseWorkshopPage extends Page implements HasTable
             ->recordUrl(fn (array $record) => ArmaReforgerWorkshop::getModWorkshopUrl($record['modId']), true)
             ->recordActions([
                 Action::make('install')
-                    ->label('Add to Server')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.actions.add_to_server'))
                     ->icon('tabler-plus')
                     ->color('success')
                     ->visible(fn (array $record) => !in_array(strtoupper($record['modId']), $this->getInstalledModIds(), true))
                     ->requiresConfirmation()
-                    ->modalHeading(fn (array $record) => "Add \"{$record['name']}\"")
-                    ->modalDescription(fn (array $record) => "This will add \"{$record['name']}\" by {$record['author']} to your server's mod list.")
+                    ->modalHeading(fn (array $record) => trans('arma-reforger-workshop::arma-reforger-workshop.modals.add_mod_heading', ['name' => $record['name']]))
+                    ->modalDescription(fn (array $record) => trans('arma-reforger-workshop::arma-reforger-workshop.modals.add_mod_description', ['name' => $record['name'], 'author' => $record['author']]))
                     ->action(function (array $record, DaemonFileRepository $fileRepository) {
                         try {
                             /** @var Server $server */
@@ -190,7 +190,7 @@ class BrowseWorkshopPage extends Page implements HasTable
                         }
                     }),
                 Action::make('installed')
-                    ->label('Installed')
+                    ->label(trans('arma-reforger-workshop::arma-reforger-workshop.actions.installed'))
                     ->icon('tabler-check')
                     ->color('gray')
                     ->disabled()
@@ -202,11 +202,11 @@ class BrowseWorkshopPage extends Page implements HasTable
     {
         return [
             Action::make('view_installed')
-                ->label('View Installed Mods')
+                ->label(trans('arma-reforger-workshop::arma-reforger-workshop.actions.view_installed_mods'))
                 ->icon('tabler-list')
                 ->url(fn () => ArmaReforgerWorkshopPage::getUrl()),
             Action::make('open_workshop')
-                ->label('Open in Browser')
+                ->label(trans('arma-reforger-workshop::arma-reforger-workshop.actions.open_in_browser'))
                 ->icon('tabler-external-link')
                 ->url('https://reforger.armaplatform.com/workshop', true),
         ];
@@ -216,8 +216,8 @@ class BrowseWorkshopPage extends Page implements HasTable
     {
         return $schema
             ->components([
-                Section::make('Browse Mods')
-                    ->description('Search and browse mods from the Bohemia Arma Reforger Workshop. Click "Add to Server" to install a mod.')
+                Section::make(trans('arma-reforger-workshop::arma-reforger-workshop.sections.browse_mods'))
+                    ->description(trans('arma-reforger-workshop::arma-reforger-workshop.sections.browse_mods_description'))
                     ->schema([
                         EmbeddedTable::make(),
                     ]),
