@@ -170,6 +170,8 @@ class BrowseWorkshopPage extends Page implements HasTable
                             );
 
                             if ($success) {
+                                $this->installedModIds = null;
+
                                 Notification::make()
                                     ->title(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_added'))
                                     ->body(trans('arma-reforger-workshop::arma-reforger-workshop.notifications.mod_added_body', ['name' => $record['name']]))
