@@ -26,6 +26,7 @@ class BrowseWorkshopPage extends Page implements HasTable
     use BlockAccessInConflict;
     use InteractsWithTable;
 
+    /** @var array<string>|null */
     protected ?array $installedModIds = null;
 
     protected static string|\BackedEnum|null $navigationIcon = 'tabler-world-search';
@@ -36,7 +37,7 @@ class BrowseWorkshopPage extends Page implements HasTable
 
     public static function canAccess(): bool
     {
-        /** @var Server $server */
+        /** @var Server|null $server */
         $server = Filament::getTenant();
 
         if (!$server) {
@@ -66,6 +67,7 @@ class BrowseWorkshopPage extends Page implements HasTable
         return trans('arma-reforger-workshop::arma-reforger-workshop.titles.browse_workshop');
     }
 
+    /** @return array<string> */
     protected function getInstalledModIds(): array
     {
         if ($this->installedModIds === null) {

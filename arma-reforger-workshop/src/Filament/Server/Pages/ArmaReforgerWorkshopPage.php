@@ -38,7 +38,7 @@ class ArmaReforgerWorkshopPage extends Page implements HasTable
 
     public static function canAccess(): bool
     {
-        /** @var Server $server */
+        /** @var Server|null $server */
         $server = Filament::getTenant();
 
         if (!$server) {

@@ -37,7 +37,10 @@ class ArmaReforgerWorkshopService
                 return [];
             }
 
-            return collect($config['game']['mods'])
+            /** @var array<int, array<string, mixed>> $mods */
+            $mods = $config['game']['mods'];
+
+            return collect($mods)
                 ->map(function ($mod) {
                     return [
                         'modId' => $mod['modId'] ?? '',
@@ -143,7 +146,10 @@ class ArmaReforgerWorkshopService
                 return false;
             }
 
-            $config['game']['mods'] = collect($config['game']['mods'])
+            /** @var array<int, array<string, mixed>> $mods */
+            $mods = $config['game']['mods'];
+
+            $config['game']['mods'] = collect($mods)
                 ->filter(fn ($mod) => strtoupper($mod['modId'] ?? '') !== $modId)
                 ->values()
                 ->toArray();
@@ -263,7 +269,7 @@ class ArmaReforgerWorkshopService
     /**
      * Search/browse mods from the Bohemia Workshop
      *
-     * @return array{mods: array, total: int, page: int, perPage: int}
+     * @return array{mods: array<int, array{modId: string, name: string, summary: string, author: string, version: string, subscribers: int, rating: int|null, thumbnail: string|null, type: string, tags: array<string>}>, total: int, page: int, perPage: int}
      */
     public function browseWorkshop(string $search = '', int $page = 1): array
     {
@@ -307,7 +313,7 @@ class ArmaReforgerWorkshopService
                                 'rating' => isset($asset['averageRating']) ? (int) round($asset['averageRating'] * 100) : null,
                                 'thumbnail' => $this->extractThumbnail($asset['previews'] ?? []),
                                 'type' => $asset['type'] ?? 'addon',
-                                'tags' => collect($asset['tags'] ?? [])->pluck('name')->toArray(),
+                                'tags' => collect((array) ($asset['tags'] ?? []))->pluck('name')->toArray(),
                             ];
 
                             if (!empty($mod['modId'])) {
@@ -333,6 +339,8 @@ class ArmaReforgerWorkshopService
 
     /**
      * Extract the best thumbnail URL from previews
+     *
+     * @param array<int, array<string, mixed>> $previews
      */
     protected function extractThumbnail(array $previews): ?string
     {
