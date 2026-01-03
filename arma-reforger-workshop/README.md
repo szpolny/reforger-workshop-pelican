@@ -1,4 +1,4 @@
-# Arma Reforger Workshop Plugin
+# Arma Reforger Workshop Plugin (by spolny)
 
 A Pelican Panel plugin for managing Arma Reforger workshop mods directly from the server panel.
 
@@ -55,7 +55,3 @@ The plugin integrates with the [Bohemia Arma Reforger Workshop](https://reforger
 Mod data is cached to improve performance:
 - Individual mod details: 6 hours
 - Workshop search results: 15 minutes
-
-## Author
-
-**spolny**
